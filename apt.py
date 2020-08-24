@@ -86,7 +86,7 @@ if __name__ == '__main__':
             # Construct apartment objects
             apartments = zip(titles, locations, prices, urls)
 
-            if unseen_apartments := new_apartments(apartments): 
+            if unseen_apartments = new_apartments(apartments): 
                 # Play sound
                 p = vlc.MediaPlayer("done-for-you.mp3")
                 p.play()
