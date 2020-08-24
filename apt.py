@@ -7,10 +7,10 @@ from tqdm import tqdm
 from selenium.webdriver.chrome.options import Options
 
 
-APT_URL = 'https://www.boligportal.dk/find?placeIds=76%2C75%2C2100%2C3921&minRooms=3'
+APT_URL = 'https://www.boligportal.dk/find?placeId=14&placeIds=14%2C19%2C24%2C44%2C49%2C106%2C817&housingTypes=1%2C3%2C4&minSize=40&maxRent=10500&id=1254595&minLat=55.6100&minLng=12.4676&maxLat=55.7299&maxLng=12.6840'
 seen_apartments = {}
 
-MAX_PRICE = 8000
+MAX_PRICE = 10500
 
 
 def get_apartment_str(title, location, price, url): 
