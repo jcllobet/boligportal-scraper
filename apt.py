@@ -7,10 +7,10 @@ from tqdm import tqdm
 from selenium.webdriver.chrome.options import Options
 
 
-APT_URL = 'https://www.boligportal.dk/find?placeId=14&placeIds=14%2C19%2C24%2C44%2C49%2C106%2C817&housingTypes=1%2C3%2C4&minSize=40&maxRent=10500&id=1254595&minLat=55.6100&minLng=12.4676&maxLat=55.7299&maxLng=12.6840'
+APT_URL = 'https://www.boligportal.dk/find?placeIds=19%2C817%2C14%2C49%2C106%2C24%2C44&housingTypes=1%2C3%2C4&maxRent=10500'
 seen_apartments = {}
 
-MAX_PRICE = 10500
+MAX_PRICE = 10400
 
 
 def get_apartment_str(title, location, price, url): 
@@ -70,12 +70,15 @@ if __name__ == '__main__':
             driver.get(APT_URL)
             rendered_source = driver.page_source
 
+            print(f'Soupifying the contents...')
             # Soupify the contents
             soup = BeautifulSoup(rendered_source, features="html.parser")
 
+            print(f'Getting all the ad_cards on the page...')
             # Get all the ad_cards on the page
             ad_cards = soup.find_all('a', {'class': ['AdCard']})
 
+            print(f'Extracting the title, location, and price...')
             # Extract the title, location, and price of all ad cards
             titles = [card.find_all('div', {'class': ['AdCard__title']})[0].decode_contents() for card in ad_cards]
             locations = [card.find_all('div', {'class': ['AdCard__location']})[0].decode_contents() for card in ad_cards]
@@ -83,10 +86,16 @@ if __name__ == '__main__':
             prices = [int(price.replace(',-', '').replace('.', '').strip()) for price in prices]
             urls = [card['href'] for card in ad_cards]
 
+            print(f'Constructing apartment objects...')
             # Construct apartment objects
             apartments = zip(titles, locations, prices, urls)
 
-            if unseen_apartments != new_apartments(apartments): 
+            unseen_apartments = new_apartments(apartments)
+
+            print("We have found some apartments")
+
+            if unseen_apartments != {}: 
+
                 # Play sound
                 p = vlc.MediaPlayer("done-for-you.mp3")
                 p.play()
